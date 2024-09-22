@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tình yêu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(45deg, #FF9A9E, #FAD0C4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 350px;
+        }
+        h1 {
+            color: #FF4B6E;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .heart {
+            position: relative;
+            width: 80px;
+            height: 72px;
+            margin: 1.5rem auto;
+            animation: pulse 1s infinite alternate;
+        }
+        .heart:before,
+        .heart:after {
+            position: absolute;
+            content: "";
+            left: 40px;
+            top: 0;
+            width: 40px;
+            height: 64px;
+            background: #FF4B6E;
+            border-radius: 40px 40px 0 0;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+        .heart:after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .buttons {
+            margin-top: 1.5rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            background-color: #FF4B6E;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #FF1493;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        #noButton {
+            transition: all 0.3s ease;
+        }
+        .flying-heart {
+            position: fixed;
+            font-size: 1.25rem;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+            max-width: 90%;
+            width: 300px;
+        }
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        .popup h2 {
+            color: #FF4B6E;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .popup p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .popup button {
+            background-color: #FF4B6E;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .popup button:hover {
+            background-color: #FF1493;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart"></div>
+        <h1>Đừng dỗi anh nha</h1>
+        <div class="buttons">
+            <button id="yesButton">Có</button>
+            <button id="noButton">Không</button>
+        </div>
+    </div>
+
+    <div class="popup" id="popup">
+        <h2>iu anh nhiều nhắm
+        </h2>
+        
+        <button onclick="closePopup()">Đóng</button>
+    </div>
+
+    <script>
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const popup = document.getElementById('popup');
+        let fontSize = 16;
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('flying-heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.opacity = Math.random() * 0.5 + 0.5;
+            document.body.appendChild(heart);
+
+            const duration = Math.random() * 3 + 2;
+            const startTime = performance.now();
+
+            function animate(time) {
+                const elapsed = (time - startTime) / 1000;
+                const progress = elapsed / duration;
+
+                if (progress < 1) {
+                    const x = parseFloat(heart.style.left);
+                    const y = 100 - (progress * 200);
+                    heart.style.transform = `translate(${(Math.sin(progress * 4 * Math.PI) * 50)}px, ${y}vh) rotate(${progress * 360}deg)`;
+                    requestAnimationFrame(animate);
+                } else {
+                    heart.remove();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        setInterval(createHeart, 300);
+
+        yesButton.addEventListener('click', () => {
+            popup.style.display = 'block';
+        });
+
+        noButton.addEventListener('click', () => {
+            fontSize -= 1;
+            if (fontSize < 8) {
+                noButton.style.display = 'none';
+            } else {
+                noButton.style.fontSize = fontSize + 'px';
+                noButton.style.padding = (fontSize / 2) + 'px ' + fontSize + 'px';
+            }
+        });
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
